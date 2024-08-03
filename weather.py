@@ -13,7 +13,17 @@ root.title('Weather App')
 root.geometry("900x500+300+200")
 root.resizable(False,False)
 
+searchBox = PhotoImage(file="search.png")
+myImage = Label(image = searchBox)
+myImage.place(x = 20, y = 20)
 
+textEntry = tk.Entry(root,justify="center", width=17,font=("poppins",25,"bold"), bg = "#B0B0B0", border=0, fg="white")
+textEntry.place(x=50, y=40)
+textEntry.focus()
+
+searchIcon = PhotoImage(file="search_icon.png")
+myimage_icon = Button(image=searchIcon, borderwidth=0, cursor="hand2", bg="#B0B0B0")
+myimage_icon.place(x=400,y=34)
 
 
 #Bottom box
