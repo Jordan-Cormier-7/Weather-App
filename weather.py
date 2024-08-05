@@ -4,6 +4,7 @@ from geopy.geocoders import Nominatim
 from tkinter import ttk, messagebox
 from timezonefinder import TimezoneFinder
 from datetime import datetime
+import requests
 import pytz
 
 root = Tk()  # GUI frame
@@ -12,7 +13,26 @@ root.geometry("900x600+300+200")
 root.resizable(False, False)
 #root.configure(bg='orange') #GUI background color
 
-# Top search box
+def getWeather():
+    city=textEntry.get()
+
+    geolocator = Nominatim(user_agent="WeatherApp/1.0")
+    location = geolocator.geocode(city)
+    obj = TimezoneFinder()
+    result = obj.timezone_at(lng = location.longitude, lat = location.latitude)
+    #print(result)
+
+    home = pytz.timezone(result)
+    local_time = datetime.now(home)
+    current_time = local_time.strftime("%I:%M %p")
+    clock.config(text=current_time)
+    name.config(text="CURRENT TIME")
+
+
+    #Weather Info
+    
+
+#Top search box
 searchBox = PhotoImage(file="images/search.png")
 myImage = Label(image=searchBox)
 myImage.place(x=20, y=20)
@@ -22,9 +42,15 @@ textEntry.place(x=50, y=40)
 textEntry.focus()
 
 searchIcon = PhotoImage(file="images/search_icon.png")
-myimage_icon = Button(image=searchIcon, borderwidth=0, cursor="hand2", bg="#B0B0B0")
+myimage_icon = Button(image=searchIcon, borderwidth=0, cursor="hand2", bg="#B0B0B0",command=getWeather)
 myimage_icon.place(x=400, y=34)
 
+
+#Current location time
+name = Label(root,font=("arial",15,"bold"))
+name.place(x=500,y=35)
+clock = Label(root,font=("Helvitica",20))
+clock.place(x=500,y=65)
 
 
 # Middle table
