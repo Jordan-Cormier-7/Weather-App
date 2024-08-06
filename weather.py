@@ -4,8 +4,11 @@ from geopy.geocoders import Nominatim
 from tkinter import ttk, messagebox
 from timezonefinder import TimezoneFinder
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 import requests
 import pytz
+
 
 root = Tk()  # GUI frame
 root.title('Weather App')
@@ -26,11 +29,26 @@ def getWeather():
     local_time = datetime.now(home)
     current_time = local_time.strftime("%I:%M %p")
     clock.config(text=current_time)
-    name.config(text="CURRENT TIME")
+    name.config(text="TIME IN "+city.upper())
 
 
-    #Weather Info
+    #Retrieving Weather Info
+    load_dotenv() #Loading API key from .env file
+    api_key = os.getenv('API_KEY')
+    api = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}'
+
+    json_data = requests.get(api).json() #Querying the request 
+    first_entry = json_data['list'][0] #Data about the first day
+
+    condition = first_entry['weather'][0]['main'] #Basic weather conditions
+    description = first_entry['weather'][0]['description'] #More descriptive conditions
+
+    print(f"\nCity: {city}")
+    print(f"Day 1: Condition: {condition}")
+    print(f"Day 1: Description: {description}")
+   
     
+
 
 #Top search box
 searchBox = PhotoImage(file="images/search.png")
@@ -58,7 +76,8 @@ table_frame = Frame(root, bg="#B0B0B0", bd=2)
 table_frame.place(x=50, y=150, width=800, height=300)
 
 # Columns for today's, tomorrow's, and the day after tomorrow's weather
-days = ["Today", "Tomorrow", "Day After Tomorrow"]
+#days = ["Today", "Tomorrow", "Day After Tomorrow"]
+days = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"]
 for i, day in enumerate(days):
     day_frame = Frame(table_frame, bg="#1ab5ef", bd=2)
     day_frame.grid(row=0, column=i, padx=10, pady=10)
