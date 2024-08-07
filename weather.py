@@ -180,26 +180,5 @@ for i, day in enumerate(days):
     wind_value_label.pack()
     day_frames[i]['wind_value_label'] = wind_value_label
 
-
-
-# Bottom box
-Frame_image = PhotoImage(file="images/BottomBox.png")
-frame_myimage = Label(image=Frame_image)
-frame_myimage.pack(padx=5, pady=5, side=BOTTOM)
-
-# Labels at the bottom
-label1 = Label(root, text="WIND", font=("Helvetica", 15, 'bold'), fg='white', bg='#9400D3')
-label1.place(x=120, y=500)
-
-label2 = Label(root, text="HUMIDITY", font=("Helvetica", 15, 'bold'), fg="white", bg="#9400D3")
-label2.place(x=250, y=500)
-
-label3 = Label(root, text="DESCRIPTION", font=("Helvetica", 15, 'bold'), fg='white', bg='#9400D3')
-label3.place(x=430, y=500)
-
-label4 = Label(root, text="PRESSURE", font=("Helvetica", 15, 'bold'), fg='white', bg='#9400D3')
-label4.place(x=650, y=500)
-
-
-
+    
 root.mainloop()
