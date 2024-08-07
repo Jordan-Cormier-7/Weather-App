@@ -4,7 +4,6 @@ Setup Instructions:
 Run in Terminal: 
   1. pip install geopy
   2. pip install timezonefinder
-  3. pip install datetime
-  4. pip install pytz
-  5. pip install requests
-  6. pip install pillow
+  3. pip install pytz
+  4. pip install requests
+  5. pip install pillow
