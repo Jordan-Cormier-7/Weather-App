@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import os
 import requests
 import pytz
+from PIL import Image, ImageTk
 
 NUM_FORECAST_DAYS = 5
 
@@ -127,6 +128,20 @@ name.place(x=500,y=35)
 clock = Label(root,font=("Helvitica",20))
 clock.place(x=500,y=65)
 
+# resize the add.png image
+original_image = Image.open("images/add.png")
+resized_image = original_image.resize((32, 32))  
+add_image = ImageTk.PhotoImage(resized_image)
+
+
+# Favorites button
+favorites_button = Button(root, image=add_image, borderwidth=0, bg="#B0B0B0", cursor="hand2")
+favorites_button.place(x=797, y=50)  
+
+# Create the Favorites label
+favorites_label = Label(root, text="Favorites", font=("Arial", 25, "bold"), bg="#B0B0B0", fg="black")
+favorites_label.place(x=680, y=51)  
+
 
 # Middle table
 table_frame = Frame(root, bg="#B0B0B0", bd=2)
@@ -180,5 +195,5 @@ for i, day in enumerate(days):
     wind_value_label.pack()
     day_frames[i]['wind_value_label'] = wind_value_label
 
-    
+
 root.mainloop()
