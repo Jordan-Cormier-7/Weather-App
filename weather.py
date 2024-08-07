@@ -15,7 +15,6 @@ NUM_FORECAST_DAYS = 5
 root = Tk()  # GUI frame
 root.title('Weather App')
 root.geometry("900x600+300+200")
-root.resizable(False, False)
 #root.configure(bg='orange') #GUI background color
 
 def update_time():
@@ -35,6 +34,34 @@ def update_time():
     # Schedule the function to run again after 60000 ms (1 minute)
     root.after(60000, update_time)
 
+#Function to add a city to favorites
+def add_to_favorites():
+    city = textEntry.get()
+    if city and city not in favorites:
+        favorites.append(city)
+        update_favorites_list()
+    else:
+        messagebox.showinfo('Weather App', 'City already in favorites or location invalid!')
+
+    update_favorites_combobox()
+
+# Function to update favorites combobox
+def update_favorites_combobox():
+    favorites_combobox['values'] = ["Favorites"] + favorites
+    favorites_combobox.current(0)  # Reset to header
+
+#Function to update favorites list
+def update_favorites_list():
+    favorites_combobox['values'] = favorites
+    if favorites:
+        favorites_combobox.current(0)
+
+#Function to fetch weather data for favorite location
+def get_weather_for_favorite(event):
+    selected_city = favorites_combobox.get()
+    textEntry.delete(0, END)
+    textEntry.insert(0, selected_city)
+    getWeather()
 
 
 def getWeather():
@@ -128,24 +155,37 @@ name.place(x=500,y=35)
 clock = Label(root,font=("Helvitica",20))
 clock.place(x=500,y=65)
 
-# resize the add.png image
+#Resizing add.png image
 original_image = Image.open("images/add.png")
-resized_image = original_image.resize((32, 32))  
+resized_image = original_image.resize((42, 42))  
 add_image = ImageTk.PhotoImage(resized_image)
 
+#Array for favorite locations
+favorites = []
 
-# Favorites button
-favorites_button = Button(root, image=add_image, borderwidth=0, bg="#B0B0B0", cursor="hand2")
-favorites_button.place(x=797, y=50)  
+#Favorites label
+favorites_label = Label(root, text="Add Location to Favorites", font=("Arial", 25, "bold"), bg="#B0B0B0")
+favorites_label.place(x=900, y=50)  
 
-# Create the Favorites label
-favorites_label = Label(root, text="Favorites", font=("Arial", 25, "bold"), bg="#B0B0B0", fg="black")
-favorites_label.place(x=680, y=51)  
+#Favorites button
+favorites_button = Button(root, image=add_image, borderwidth=0, bg="#B0B0B0", cursor="hand2",fg="black",command=add_to_favorites)
+favorites_button.place(x=1309, y=50)  
+
+# Dropdown menu for favorite locations
+favorites_combobox = ttk.Combobox(root, font=("Arial", 20), state="readonly")
+favorites_combobox.place(x=1370, y=55)
+favorites_combobox['values'] = ["Favorites"]  #Default header
+favorites_combobox.current(0)  #Setting the default selection
+favorites_combobox.bind("<<ComboboxSelected>>", get_weather_for_favorite)
+
+# Frame to display favorites
+#favorites_frame = Frame(root, bg="#B0B0B0", bd=2)
+#favorites_frame.place(x=900, y=100, width=200, height=300)
 
 
 # Middle table
 table_frame = Frame(root, bg="#B0B0B0", bd=2)
-table_frame.place(x=50, y=150, width=800, height=300)
+table_frame.place(x=550, y=270, width=850, height=370)
 
 # Columns for today's, tomorrow's, and the day after tomorrow's weather
 days = ["---"]*5
