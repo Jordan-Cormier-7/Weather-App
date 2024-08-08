@@ -1,3 +1,9 @@
+#Jordan Cormier, Hedie Yazdanparast
+#Dr. Smith, CSCI 4900 
+#Final Project
+#GUI Weather App
+
+
 from tkinter import *
 import tkinter as tk
 from geopy.geocoders import Nominatim
@@ -8,18 +14,53 @@ from dotenv import load_dotenv
 import os
 import requests
 import pytz
+import random
 from PIL import Image, ImageTk
 
 NUM_FORECAST_DAYS = 5
 
-root = Tk()  # GUI frame
+root = Tk()  #GUI frame
 root.title('Weather App')
-root.geometry("900x600+300+200")
-#root.configure(bg='orange') #GUI background color
+root.geometry("900x600+300+200") 
 
+#Setting background image
+background_image = Image.open("images/Weather Background.png")  # Replace with your image path
+background_image = background_image.resize((2400, 2400), Image.LANCZOS)  # Resize to fit the window
+bg_image = ImageTk.PhotoImage(background_image)
+
+# Create a label for the background image
+background_label = Label(root, image=bg_image)
+background_label.place(relwidth=1, relheight=1)  # Fill the entire window
+
+
+#List of fun weather facts
+fun_facts = [
+    "Did you know there are over 10 different types of clouds?",
+    "Lightning strikes the Earth about 100 times per second!",
+    "The coldest temperature ever recorded was -128.6°F in Antarctica.",
+    "Mawsynram, India, holds the record for the highest average rainfall.",
+    "You can tell the temperature by counting a cricket's chirps!",
+    "About 2,000 thunderstorms strike down on Earth every minute.",
+    "Cape Farewell in Greenland is the windiest place on the planet.",
+    "Waterspouts, or rotating columns of air over water, can make sea creatures rain down from the sky.",
+    "Lightning often follows a volcanic eruption.",
+    "A heatwave can make train tracks bend!",
+]
+
+#Function that displays a random fact
+def display_random_fact():
+    fact = random.choice(fun_facts)
+    fact_label.config(text="Fun fact: "+fact)
+
+#Label for fact
+fact_label = Label(root, text="", font=("Arial", 20), bg="#34eb6b")
+fact_label.place(x=500, y=650)  # Adjust position as needed
+
+
+#Function that constantly updates the time while app is running
 def update_time():
-    city = textEntry.get()  # Get the current city from the entry
-    if city:  # Check if a city is entered
+    city = textEntry.get()  #Getting the current city from the entry
+    if city:  #Checking if a city is entered
         geolocator = Nominatim(user_agent="WeatherApp/1.0")
         location = geolocator.geocode(city)
         obj = TimezoneFinder()
@@ -29,10 +70,11 @@ def update_time():
         local_time = datetime.now(home)
         current_time = local_time.strftime("%I:%M %p")
         clock.config(text=current_time)
-        name.config(text="TIME IN " + city.upper())
+        location_name.config(text="TIME IN " + city.upper())
 
-    # Schedule the function to run again after 60000 ms (1 minute)
+    #Scheduling function to run again after 60000 ms (1 minute)
     root.after(60000, update_time)
+
 
 #Function to add a city to favorites
 def add_to_favorites():
@@ -40,21 +82,25 @@ def add_to_favorites():
     if city and city not in favorites:
         favorites.append(city)
         update_favorites_list()
+        messagebox.showinfo('Weather App','Location added to Favorites.')
     else:
-        messagebox.showinfo('Weather App', 'City already in favorites or location invalid!')
+        messagebox.showinfo('Weather App', 'Location already in favorites or location invalid!')
 
     update_favorites_combobox()
 
-# Function to update favorites combobox
+
+#Function to update favorites combobox
 def update_favorites_combobox():
     favorites_combobox['values'] = ["Favorites"] + favorites
     favorites_combobox.current(0)  # Reset to header
+
 
 #Function to update favorites list
 def update_favorites_list():
     favorites_combobox['values'] = favorites
     if favorites:
         favorites_combobox.current(0)
+
 
 #Function to fetch weather data for favorite location
 def get_weather_for_favorite(event):
@@ -64,6 +110,7 @@ def get_weather_for_favorite(event):
     getWeather()
 
 
+#Function to get weather forecast of searched location
 def getWeather():
 
     try:
@@ -79,7 +126,7 @@ def getWeather():
         local_time = datetime.now(home)
         current_time = local_time.strftime("%I:%M %p")
         clock.config(text=current_time)
-        name.config(text="TIME IN "+city.upper())
+        location_name.config(text="TIME IN "+city.upper())
 
 
 
@@ -93,13 +140,13 @@ def getWeather():
         for i in range(NUM_FORECAST_DAYS):
             day_data = json_data['list'][i * 8]  #8*3-hour intervals = 1 day
 
-            condition = day_data['weather'][0]['main']  #Basic weather conditions
+            #condition = day_data['weather'][0]['main']  Basic weather conditions
+            #temp = int(day_data['main']['temp'])  #Convert from Kelvin to Celsius
             description = day_data['weather'][0]['description']  #More descriptive conditions
-            temp = int(day_data['main']['temp'])  #Convert from Kelvin to Celsius
             humidity = day_data['main']['humidity']
             wind_speed = day_data['wind']['speed']
             date_txt = day_data['dt_txt'].split(" ")[0] #Get the date part only
-
+        
             #Calculating high and low for each day
             high = -1000
             low = 1000
@@ -125,14 +172,13 @@ def getWeather():
             day_frames[i]['humidity_value_label'].config(text=f"{humidity}%")
             day_frames[i]['wind_value_label'].config(text=f"{wind_speed} mph")
 
-        update_time()
+        update_time() #Updates clock in real time
+        display_random_fact()
 
     except Exception as e:
         messagebox.showerror('Weather App','Invalid Location!')
 
     return
-   
-    
 
 
 #Top search box
@@ -140,18 +186,20 @@ searchBox = PhotoImage(file="images/search.png")
 myImage = Label(image=searchBox)
 myImage.place(x=20, y=20)
 
+#Text content of searched location
 textEntry = tk.Entry(root, justify="center", width=17, font=("poppins", 25, "bold"), bg="#B0B0B0", border=0, fg="white")
 textEntry.place(x=50, y=40)
 textEntry.focus()
 
+#Search icon 
 searchIcon = PhotoImage(file="images/search_icon.png")
 myimage_icon = Button(image=searchIcon, borderwidth=0, cursor="hand2", bg="#B0B0B0",command=getWeather)
 myimage_icon.place(x=400, y=34)
 
 
 #Current location time
-name = Label(root,font=("arial",15,"bold"))
-name.place(x=500,y=35)
+location_name = Label(root,font=("arial",15,"bold"))
+location_name.place(x=500,y=35)
 clock = Label(root,font=("Helvitica",20))
 clock.place(x=500,y=65)
 
@@ -164,11 +212,11 @@ add_image = ImageTk.PhotoImage(resized_image)
 favorites = []
 
 #Favorites label
-favorites_label = Label(root, text="Add Location to Favorites", font=("Arial", 25, "bold"), bg="#B0B0B0")
+favorites_label = Label(root, text="Add Location to Favorites", font=("Arial", 25, "bold"), bg="yellow")
 favorites_label.place(x=900, y=50)  
 
 #Favorites button
-favorites_button = Button(root, image=add_image, borderwidth=0, bg="#B0B0B0", cursor="hand2",fg="black",command=add_to_favorites)
+favorites_button = Button(root, image=add_image, borderwidth=0, bg="white", cursor="hand2",fg="black",command=add_to_favorites)
 favorites_button.place(x=1309, y=50)  
 
 # Dropdown menu for favorite locations
@@ -178,16 +226,12 @@ favorites_combobox['values'] = ["Favorites"]  #Default header
 favorites_combobox.current(0)  #Setting the default selection
 favorites_combobox.bind("<<ComboboxSelected>>", get_weather_for_favorite)
 
-# Frame to display favorites
-#favorites_frame = Frame(root, bg="#B0B0B0", bd=2)
-#favorites_frame.place(x=900, y=100, width=200, height=300)
 
+#Forecast Table Positioning
+table_frame = Frame(root, bg="#0952e3", bd=2)
+table_frame.place(x=550, y=270, width=820, height=370)
 
-# Middle table
-table_frame = Frame(root, bg="#B0B0B0", bd=2)
-table_frame.place(x=550, y=270, width=850, height=370)
-
-# Columns for today's, tomorrow's, and the day after tomorrow's weather
+#Columns for Forecast table
 days = ["---"]*5
 day_frames = []
 
@@ -207,7 +251,7 @@ for i, day in enumerate(days):
     date_label.pack(pady=10)
     day_frames[i]['date_label'] = date_label
 
-    temp_label = Label(day_frame, text="Temperature:", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
+    temp_label = Label(day_frame, text="HI/LOW:", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
     temp_label.pack()
 
     temp_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
