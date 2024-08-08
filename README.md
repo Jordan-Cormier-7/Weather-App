@@ -1,4 +1,4 @@
-Weather app built in Python that will tell the user the forecasted \
+Project Description: Weather app built in Python that will tell the user the forecasted\
 weather conditions in a certain location along with some additional features.
 
 Setup Instructions:
@@ -13,4 +13,4 @@ Setup Instructions:
 - Additional Notes Before Running Program:
   - "venv" folder not necessary to clone
 
-Run in Terminal "python weather.py"
+- Run in Terminal "python weather.py"
