@@ -6,16 +6,16 @@
 
 from tkinter import *
 import tkinter as tk
-from geopy.geocoders import Nominatim
+from geopy.geocoders import Nominatim  #Geopy module used to handle geographical data 
 from tkinter import ttk, messagebox
 from timezonefinder import TimezoneFinder
 from datetime import datetime
 from dotenv import load_dotenv
 import os
-import requests
-import pytz
+import requests  #Allows for making API interaction
+import pytz  #Time zone support
 import random
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk  #Pillow module allows for image processing capabilities
 
 NUM_FORECAST_DAYS = 5
 
@@ -24,13 +24,13 @@ root.title('Weather App')
 root.geometry("900x600+300+200") 
 
 #Setting background image
-background_image = Image.open("images/Weather Background.png")  # Replace with your image path
-background_image = background_image.resize((2400, 2400), Image.LANCZOS)  # Resize to fit the window
+background_image = Image.open("images/Weather Background.png")  #Replace with your image path
+background_image = background_image.resize((2400, 2400), Image.LANCZOS)  #Resize to fit the window
 bg_image = ImageTk.PhotoImage(background_image)
 
-# Create a label for the background image
+#Label for the background image
 background_label = Label(root, image=bg_image)
-background_label.place(relwidth=1, relheight=1)  # Fill the entire window
+background_label.place(relwidth=1, relheight=1)  #Filling background with entire bg image
 
 
 #List of fun weather facts
@@ -92,7 +92,7 @@ def add_to_favorites():
 #Function to update favorites combobox
 def update_favorites_combobox():
     favorites_combobox['values'] = ["Favorites"] + favorites
-    favorites_combobox.current(0)  # Reset to header
+    favorites_combobox.current(0)
 
 
 #Function to update favorites list
@@ -114,20 +114,18 @@ def get_weather_for_favorite(event):
 def getWeather():
 
     try:
-        city=textEntry.get()
-
+        city=textEntry.get() #Entered location
         geolocator = Nominatim(user_agent="WeatherApp/1.0")
-        location = geolocator.geocode(city)
+        location = geolocator.geocode(city) #Retrieve geographical coordinates
         obj = TimezoneFinder()
         result = obj.timezone_at(lng = location.longitude, lat = location.latitude)
-        #print(result)
 
+        #Setting clock for searched location
         home = pytz.timezone(result)
         local_time = datetime.now(home)
         current_time = local_time.strftime("%I:%M %p")
         clock.config(text=current_time)
         location_name.config(text="TIME IN "+city.upper())
-
 
 
         #Retrieving Weather Info
@@ -162,10 +160,11 @@ def getWeather():
 
             
 
-            #Convert date_txt to a datetime object and get the day of the week
+            #Converting date_txt to a datetime object and get the day of the week
             date_obj = datetime.strptime(date_txt, "%Y-%m-%d")
             day_of_week = date_obj.strftime("%A")
 
+            #Rendering all weather info for one day
             day_frames[i]['date_label'].config(text=day_of_week)
             day_frames[i]['temp_value_label'].config(text=f"{int(high)}°F/{int(low)}°F")
             day_frames[i]['desc_value_label'].config(text=description.capitalize())
@@ -236,6 +235,7 @@ days = ["---"]*5
 day_frames = []
 
 for i, day in enumerate(days):
+    #Initializing forecast table
     day_frame = Frame(table_frame, bg="#1ab5ef", bd=2)
     day_frame.grid(row=0, column=i, padx=10, pady=10)
     day_frames.append({
@@ -247,35 +247,35 @@ for i, day in enumerate(days):
         'wind_value_label': None
     })
 
-    date_label = Label(day_frame, text=day, font=("Helvetica", 20, 'bold'), fg="white", bg="#1ab5ef")
+    date_label = Label(day_frame, text=day, font=("Helvetica", 20, 'bold'), fg="white", bg="#1ab5ef") #Day of week
     date_label.pack(pady=10)
     day_frames[i]['date_label'] = date_label
 
     temp_label = Label(day_frame, text="HI/LOW:", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
     temp_label.pack()
 
-    temp_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
+    temp_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef") #High and low temps
     temp_value_label.pack()
     day_frames[i]['temp_value_label'] = temp_value_label
 
     desc_label = Label(day_frame, text="Description:", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
     desc_label.pack()
 
-    desc_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
+    desc_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef") #Weather description
     desc_value_label.pack()
     day_frames[i]['desc_value_label'] = desc_value_label
 
     humidity_label = Label(day_frame, text="Humidity:", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
     humidity_label.pack()
 
-    humidity_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
+    humidity_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef") #Humidity value
     humidity_value_label.pack()
     day_frames[i]['humidity_value_label'] = humidity_value_label
 
     wind_label = Label(day_frame, text="Wind:", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
     wind_label.pack()
 
-    wind_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef")
+    wind_value_label = Label(day_frame, text="N/A", font=("Helvetica", 15), fg="white", bg="#1ab5ef") #Wind speeds
     wind_value_label.pack()
     day_frames[i]['wind_value_label'] = wind_value_label
 
