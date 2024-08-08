@@ -228,7 +228,7 @@ favorites_combobox.bind("<<ComboboxSelected>>", get_weather_for_favorite)
 
 #Forecast Table Positioning
 table_frame = Frame(root, bg="#0952e3", bd=2)
-table_frame.place(x=550, y=270, width=820, height=370)
+table_frame.place(x=550, y=270, width=860, height=370)
 
 #Columns for Forecast table
 days = ["---"]*5
