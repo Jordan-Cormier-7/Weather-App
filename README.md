@@ -10,7 +10,4 @@ Setup Instructions:
   5. pip install pillow
   6. pip install python-dotenv
 
-- Additional Notes Before Running Program:
-  - "venv" folder not necessary to clone
-
 - Run in Terminal "python weather.py"
