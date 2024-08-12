@@ -2,9 +2,7 @@ Project Description: Weather app built in Python that will tell the user the for
 weather conditions in a certain location along with some additional features.
 
 Setup Instructions:
-
-- Libraries to Install in Terminal:
-
+- Libraries to Install in Terminal: 
   1. pip install geopy
   2. pip install timezonefinder
   3. pip install pytz
