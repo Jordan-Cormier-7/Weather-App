@@ -4,7 +4,7 @@
 #GUI Weather App
 
 
-from tkinter import *
+from tkinter import * 
 import tkinter as tk
 from geopy.geocoders import Nominatim  #Geopy module used to handle geographical data 
 from tkinter import ttk, messagebox
